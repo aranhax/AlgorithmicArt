@@ -83,7 +83,7 @@ if __name__ == "__main__":
     ss = space_states(n_generations)
     n_cells = ss.shape[1]
 
-    path_figures = "/home/aranildo/temp/art/ca/1d/bw"
+    path_figures = "~/temp/art/ca/1d/bw"
 
     # Image size
     width = n_cells
