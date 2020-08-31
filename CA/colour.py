@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sun Sep  2 12:51:01 2018
+Created on Sep  2018
 
 Initially based on:
 https://en.wikipedia.org/wiki/A_New_Kind_of_Science
@@ -11,7 +11,6 @@ https://faingezicht.com/articles/2017/01/23/wolfram/
 https://stackoverflow.com/questions/12062920/how-do-i-create-an-image-in-pil-using-a-list-of-rgb-tuples
 http://stackoverflow.com/a/10032271/562769
 
-@author: aranildo
 """
 
 import numpy as np
@@ -19,8 +18,8 @@ import itertools as it
 import matplotlib.pyplot as plt
 import scipy.misc as smp
 
-def states(n_generations=50, size=(10,10)):    
-    actual_row = np.random.randint(0, 3, size=size)    
+def states(n_generations=50, size=(10,10), colors=8):    
+    actual_row = np.random.randint(0, colors, size=size)    
     #spacetime = np.zeros(size + (n_generations,),dtype=np.int8)
     spacetime = np.zeros(size ,dtype=np.int8)
     spacetime[:,:] = actual_row
@@ -61,11 +60,11 @@ def find_majority(votes):
     top_two = vote_count.most_common(2)
     if len(top_two)>1 and top_two[0][1] == top_two[1][1]:
         # It is a tie
-        return 0
+        return np.random.randint(0, 8)    #top_two[0][0]#0
     return top_two[0][0]
 
 
-save_path_figures = "/home/aranildo/temp/art/gif/test/"
+save_path_figures = "/home/aranildo/temp/art/ca/virus/"
 
 
 width = 1920
@@ -73,23 +72,31 @@ height = 1080
 
 # Create a 1024x1024x3 array of 8 bit unsigned integers
 data_img = np.zeros((height,width,3), dtype=np.uint8 )
-ss = states(size=(height,width))
+ss = states(size=(height,width), colors=1)
+elem = [np.random.randint(0, height),np.random.randint(0, width)]
+data_img[ss == 0] = [255,0,0] 
+
 # serial
-for t in range(300):
-    for t2 in range(width*20):#*height):
+for t in range(400):
+    for t2 in range(width*30):#*height):
         elem = [np.random.randint(0, height),np.random.randint(0, width)]
         ss[elem[0],elem[1]] = define_rule_notime(ss,(elem[0],elem[1]))
         
     data_img[ss == 0] = [255,0,0] 
     data_img[ss == 1] = [0,255,0] 
     data_img[ss == 2] = [0,0,255] 
+    # data_img[ss == 3] = [0,0,0] 
+    # data_img[ss == 4] = [255,255,255] 
+    # data_img[ss == 5] = [255,255,0] 
+    # data_img[ss == 6] = [0,255,255] 
+    # data_img[ss == 7] = [255,0,255] 
     
     img = smp.toimage(data_img)       # Create a PIL image
     #if t//100: 
     img.save(save_path_figures + 'Frame' + str(t+1).zfill(3) + '.jpeg')
 
 
-img.show()      
+#img.show()      
 
 
 # Image size
